@@ -56,9 +56,14 @@ export BINDIR="$ERTS_DIR/bin"
 export EMU="beam"
 export LD_LIBRARY_PATH="${ERTS_DIR}/lib:${LD_LIBRARY_PATH}"
 
-# disable Erlang crash dumps and Linux core dumps
+# disable Erlang crash dumps
 export ERL_CRASH_DUMP="/dev/null"
-ulimit -c 0
+
+# disable Linux core dumps by default but add toggle to re-enable them
+ENABLE_CORE_DUMPS=${ENABLE_CORE_DUMPS:-false}
+if [ $ENABLE_CORE_DUMPS = "false" ]; then
+    ulimit -c 0
+fi;
 
 # Store passed arguments since they will be erased by `set`
 ARGS="$@"

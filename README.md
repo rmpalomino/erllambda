@@ -135,6 +135,27 @@ aws --profile default --region &lt;region&gt; \
  --role &lt;role-arn&gt;
 </pre>
 
+#### Enabling Linux core dumps
+
+By default, the AWS Lambda native runtime allows Linux core dumps.
+To prevent the limited disk space at /tmp from filling with core dumps after repeated
+Erlang VM crashes, erllambda explicitly disables core dumps in the bootstrap script.
+
+To re-enable core dumps, set the value of the `ENABLE_CORE_DUMPS` environment variable on
+AWS Lambda function creation step to `true`. 
+
+```
+aws --profile default --region <region> \
+ lambda create-function \
+ --function-name <your_function> \
+ --memory-size 1024 \
+ --handler <your_function_module_name> \
+ --zip-file fileb://_build/prod/<your_function>-0.0.0.zip \
+ --environment "Variables={ENABLE_CORE_DUMPS=true}"
+ --runtime provided \
+ --role <role-arn>
+```
+
 ### Basic Deployment
 
 See [Erllambda Example](https://github.com/alertlogic/erllambda_example) for the step-by-step procedure to deploy your Lambda.
